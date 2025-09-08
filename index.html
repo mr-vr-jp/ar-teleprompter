@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Teleprompter - AR Glass Ready</title>
+    <title>Teleprompter - AR Glass Ready</title>
     <style>
         * {
             margin: 0;
@@ -460,7 +460,7 @@
     <div class="setup-screen" id="setupScreen">
         <div class="setup-container">
             <div class="setup-header">
-                <h1 class="setup-title">PROFESSIONAL TELEPROMPTER</h1>
+                <h1 class="setup-title">TELEPROMPTER</h1>
                 <p class="setup-subtitle">Optimized for AR glasses and professional presentations</p>
             </div>
             
@@ -530,8 +530,8 @@
             <div class="speed-control">
                 <span class="speed-label">速度</span>
                 <input type="range" class="speed-slider" id="speedSlider" 
-                    min="0.5" max="3" step="0.1" value="1" onchange="changeSpeed(this.value)">
-                <span class="speed-value" id="speedValue">1.0x</span>
+                    min="0.1" max="1.5" step="0.05" value="0.7" onchange="changeSpeed(this.value)">
+                <span class="speed-value" id="speedValue">0.7x</span>
             </div>
             
             <button class="control-btn" onclick="toggleSettings()" title="設定">
@@ -599,7 +599,7 @@
             lines: [],
             currentLine: 0,
             isPlaying: false,
-            scrollSpeed: 1,
+            scrollSpeed: 0.7,
             scrollMode: 'line', // 'line', 'smooth', 'word'
             fontSize: 56,
             lineHeight: 1.6,
@@ -967,11 +967,11 @@
                         previousLine();
                         break;
                     case 'ArrowUp':
-                        changeSpeed(Math.min(3, state.scrollSpeed + 0.1));
+                        changeSpeed(Math.min(1.5, state.scrollSpeed + 0.05));
                         document.getElementById('speedSlider').value = state.scrollSpeed;
                         break;
                     case 'ArrowDown':
-                        changeSpeed(Math.max(0.5, state.scrollSpeed - 0.1));
+                        changeSpeed(Math.max(0.1, state.scrollSpeed - 0.05));
                         document.getElementById('speedSlider').value = state.scrollSpeed;
                         break;
                     case 'Escape':
