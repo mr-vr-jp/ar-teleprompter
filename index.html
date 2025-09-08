@@ -461,13 +461,23 @@
         /* Focus Mode */
         .focus-mode .top-bar,
         .focus-mode .control-panel {
-            opacity: 0.3;
+            opacity: 0.1;
             transition: opacity 0.3s ease;
         }
         
         .focus-mode:hover .top-bar,
-        .focus-mode:hover .control-panel {
+        .focus-mode:hover .control-panel,
+        .focus-mode.settings-open .top-bar,
+        .focus-mode.settings-open .control-panel {
             opacity: 1;
+        }
+        
+        .focus-mode .text-scroller {
+            background: rgba(0, 0, 0, 0.95);
+        }
+        
+        .focus-mode .reading-guide {
+            opacity: 0.2;
         }
     </style>
 </head>
@@ -543,11 +553,13 @@
                 <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
             </button>
             
-            <div class="speed-control">
+            <div class="speed-control" style="display: flex; align-items: center; gap: 10px;">
                 <span class="speed-label">速度</span>
+                <button class="control-btn" onclick="changeSpeed(Math.max(0.1, state.scrollSpeed - 0.1))" style="width: 50px; height: 50px; font-size: 18px;">遅</button>
                 <input type="range" class="speed-slider" id="speedSlider" 
                     min="0.1" max="1.5" step="0.05" value="0.7" onchange="changeSpeed(this.value)">
-                <span class="speed-value" id="speedValue">0.7x</span>
+                <span class="speed-value" id="speedValue" style="min-width: 50px; text-align: center;">0.7x</span>
+                <button class="control-btn" onclick="changeSpeed(Math.min(1.5, state.scrollSpeed + 0.1))" style="width: 50px; height: 50px; font-size: 18px;">速</button>
             </div>
             
             <button class="control-btn" onclick="toggleSettings()" title="設定">
@@ -594,12 +606,12 @@
                 <div class="setting-label">表示オプション</div>
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
                     <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
-                        <input type="checkbox" onchange="toggleMirror(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
-                        <span style="font-size: 16px">ミラーモード</span>
+                        <input type="checkbox" id="mirrorCheckbox" onchange="toggleMirror(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span style="font-size: 16px">ミラーモード（左右反転）</span>
                     </label>
                     <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
-                        <input type="checkbox" onchange="toggleFocusMode(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
-                        <span style="font-size: 16px">フォーカスモード</span>
+                        <input type="checkbox" id="focusCheckbox" onchange="toggleFocusMode(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span style="font-size: 16px">フォーカスモード（UI透明化）</span>
                     </label>
                     <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
                         <input type="checkbox" checked onchange="toggleGuide(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
@@ -672,7 +684,12 @@
         }
         
         function updateDisplay() {
-            // Update line classes
+            updateLineClasses();
+            scrollToCurrentLine();
+            updateProgressInfo();
+        }
+        
+        function updateLineClasses() {
             const lines = document.querySelectorAll('.text-line');
             lines.forEach((line, index) => {
                 line.classList.remove('current', 'next', 'passed');
@@ -684,14 +701,10 @@
                     line.classList.add('next');
                 }
             });
-            
-            // Scroll to current line
-            scrollToCurrentLine();
-            
-            // Update progress
+        }
+        
+        function updateProgressInfo() {
             updateProgress();
-            
-            // Update line info
             document.getElementById('lineInfo').textContent = 
                 `${state.currentLine + 1} / ${state.lines.length}`;
         }
@@ -765,17 +778,18 @@
         }
         
         function autoScrollSmooth() {
-            // Implement smooth scrolling
-            const scrollStep = 2 * state.scrollSpeed;
+            // Smooth continuous scrolling
+            const scrollStep = 1.5 * state.scrollSpeed;
             
             state.autoScrollInterval = setInterval(() => {
                 const content = document.getElementById('textContent');
                 const currentTransform = content.style.transform;
                 const currentY = parseFloat(currentTransform.replace(/[^\d.-]/g, '')) || 0;
                 
+                // Continuously scroll without jumps
                 content.style.transform = `translateY(${currentY - scrollStep}px)`;
                 
-                // Check if we need to update current line
+                // Update current line indicator without affecting scroll
                 const lines = document.querySelectorAll('.text-line');
                 const container = document.getElementById('textScroller');
                 const centerY = container.offsetHeight / 2;
@@ -788,17 +802,25 @@
                     if (Math.abs(lineCenter - centerY) < rect.height / 2) {
                         if (state.currentLine !== index) {
                             state.currentLine = index;
-                            updateDisplay();
+                            // Only update classes and progress, not scroll position
+                            updateLineClasses();
+                            updateProgressInfo();
                         }
                     }
                 });
                 
-                if (state.currentLine >= state.lines.length - 1) {
-                    stopAutoScroll();
-                    state.isPlaying = false;
-                    togglePlay();
+                // Check if reached the end
+                const lastLine = lines[lines.length - 1];
+                if (lastLine) {
+                    const lastRect = lastLine.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+                    if (lastRect.bottom < containerRect.top + centerY) {
+                        stopAutoScroll();
+                        state.isPlaying = false;
+                        togglePlay();
+                    }
                 }
-            }, 50);
+            }, 30);
         }
         
         function autoScrollWord() {
@@ -841,8 +863,10 @@
         
         // Speed Control
         function changeSpeed(value) {
+            value = Math.round(value * 10) / 10; // Round to 1 decimal
             state.scrollSpeed = parseFloat(value);
-            document.getElementById('speedValue').textContent = `${value}x`;
+            document.getElementById('speedValue').textContent = `${value.toFixed(1)}x`;
+            document.getElementById('speedSlider').value = value;
             
             if (state.isPlaying) {
                 stopAutoScroll();
@@ -853,7 +877,15 @@
         // Settings
         function toggleSettings() {
             const panel = document.getElementById('settingsPanel');
+            const teleprompter = document.getElementById('teleprompter');
             panel.classList.toggle('open');
+            
+            // Add settings-open class to maintain visibility in focus mode
+            if (panel.classList.contains('open')) {
+                teleprompter.classList.add('settings-open');
+            } else {
+                teleprompter.classList.remove('settings-open');
+            }
         }
         
         function setScrollMode(mode) {
@@ -891,14 +923,18 @@
                 line.style.lineHeight = value;
             });
             document.getElementById('lineHeightDisplay').textContent = value.toFixed(1);
+            scrollToCurrentLine();
         }
         
         function toggleMirror(enabled) {
             const container = document.getElementById('textContent');
             if (enabled) {
                 container.classList.add('mirror-mode');
+                // Visual feedback
+                document.getElementById('mirrorCheckbox').checked = true;
             } else {
                 container.classList.remove('mirror-mode');
+                document.getElementById('mirrorCheckbox').checked = false;
             }
         }
         
@@ -906,8 +942,11 @@
             const teleprompter = document.getElementById('teleprompter');
             if (enabled) {
                 teleprompter.classList.add('focus-mode');
+                // Visual feedback
+                document.getElementById('focusCheckbox').checked = true;
             } else {
                 teleprompter.classList.remove('focus-mode');
+                document.getElementById('focusCheckbox').checked = false;
             }
         }
         
