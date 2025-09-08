@@ -467,12 +467,12 @@
         }
         
         /* Mirroring */
-        .mirror-mode {
-            transform: scaleX(-1) !important;
+        .text-content.mirror-mode {
+            transform: scaleX(-1);
         }
         
-        .mirror-mode .text-line {
-            transform: scaleX(-1) !important;
+        .text-content.mirror-mode .text-line {
+            transform: scaleX(-1);
         }
         
         /* Focus Mode */
@@ -735,9 +735,16 @@
                 const containerHeight = container.offsetHeight;
                 const lineTop = currentLineEl.offsetTop;
                 const lineHeight = currentLineEl.offsetHeight;
+                // より正確に中央に配置するため、実際の行の中心を計算
                 const targetOffset = (containerHeight / 2) - (lineHeight / 2);
                 
-                content.style.transform = `translateY(${-lineTop + targetOffset}px)`;
+                // ミラーモードの場合はscaleXを保持
+                const hasMirror = content.classList.contains('mirror-mode');
+                if (hasMirror) {
+                    content.style.transform = `translateY(${-lineTop + targetOffset}px) scaleX(-1)`;
+                } else {
+                    content.style.transform = `translateY(${-lineTop + targetOffset}px)`;
+                }
             }
         }
         
