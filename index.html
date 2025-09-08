@@ -191,7 +191,7 @@
         .text-container {
             position: absolute;
             top: 100px;
-            bottom: 120px;
+            bottom: 160px;
             left: 0;
             right: 0;
             display: flex;
@@ -262,21 +262,22 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 100px;
+            height: 140px;
             background: var(--bg-medium);
             backdrop-filter: blur(10px);
             border-top: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
             z-index: 100;
+            padding: 20px;
         }
         
         .control-btn {
-            width: 50px;
-            height: 50px;
-            border: 1px solid var(--border-color);
+            width: 75px;
+            height: 75px;
+            border: 2px solid var(--border-color);
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-primary);
             border-radius: 50%;
@@ -285,7 +286,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
         }
         
         .control-btn:hover {
@@ -299,8 +300,8 @@
         }
         
         .control-btn svg {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             fill: currentColor;
         }
         
@@ -350,7 +351,7 @@
             top: 60px;
             right: 0;
             width: 320px;
-            height: calc(100% - 160px);
+            height: calc(100% - 200px);
             background: var(--bg-medium);
             backdrop-filter: blur(10px);
             border-left: 1px solid var(--border-color);
@@ -391,13 +392,14 @@
         }
         
         .font-size-input {
-            width: 80px;
-            padding: 8px;
+            width: 100px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 16px;
+            height: 45px;
         }
         
         /* Scroll Mode Buttons */
@@ -409,14 +411,15 @@
         
         .mode-btn {
             flex: 1;
-            padding: 10px;
+            padding: 18px 12px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
             color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 12px;
+            font-size: 14px;
+            min-height: 55px;
         }
         
         .mode-btn.active {
@@ -572,24 +575,24 @@
                 <div class="setting-label">行間隔</div>
                 <div class="setting-control">
                     <input type="range" min="1" max="2.5" step="0.1" value="1.6" 
-                        onchange="changeLineHeight(this.value)" style="width: 100%">
+                        onchange="changeLineHeight(this.value)" style="width: 100%; height: 8px; cursor: pointer;">
                 </div>
             </div>
             
             <div class="setting-group">
                 <div class="setting-label">表示オプション</div>
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer">
-                        <input type="checkbox" onchange="toggleMirror(this.checked)">
-                        <span style="font-size: 14px">ミラーモード</span>
+                    <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
+                        <input type="checkbox" onchange="toggleMirror(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span style="font-size: 16px">ミラーモード</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer">
-                        <input type="checkbox" onchange="toggleFocusMode(this.checked)">
-                        <span style="font-size: 14px">フォーカスモード</span>
+                    <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
+                        <input type="checkbox" onchange="toggleFocusMode(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span style="font-size: 16px">フォーカスモード</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer">
-                        <input type="checkbox" checked onchange="toggleGuide(this.checked)">
-                        <span style="font-size: 14px">読みガイド表示</span>
+                    <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
+                        <input type="checkbox" checked onchange="toggleGuide(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span style="font-size: 16px">読みガイド表示</span>
                     </label>
                 </div>
             </div>
