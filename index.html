@@ -363,7 +363,7 @@
             position: fixed;
             top: 60px;
             right: 0;
-            width: 320px;
+            width: 500px;
             height: calc(100% - 200px);
             background: var(--bg-medium);
             backdrop-filter: blur(10px);
@@ -621,18 +621,18 @@
             
             <div class="setting-group">
                 <div class="setting-label">表示オプション</div>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px">
-                    <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; width: 45%; background: rgba(255, 255, 255, 0.02); border-radius: 6px;">
                         <input type="checkbox" id="mirrorCheckbox" onchange="toggleMirror(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
-                        <span style="font-size: 16px">ミラーモード（左右反転）</span>
+                        <span style="font-size: 15px">ミラー</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; width: 45%; background: rgba(255, 255, 255, 0.02); border-radius: 6px;">
                         <input type="checkbox" id="focusCheckbox" onchange="toggleFocusMode(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
-                        <span style="font-size: 16px">フォーカスモード（UI透明化）</span>
+                        <span style="font-size: 15px">フォーカス</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 10px 0;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; width: 45%; background: rgba(255, 255, 255, 0.02); border-radius: 6px;">
                         <input type="checkbox" checked onchange="toggleGuide(this.checked)" style="width: 20px; height: 20px; cursor: pointer;">
-                        <span style="font-size: 16px">読みガイド表示</span>
+                        <span style="font-size: 15px">ガイド</span>
                     </label>
                 </div>
             </div>
