@@ -705,7 +705,14 @@
         
         function updateDisplay() {
             updateLineClasses();
+            // ミラーモードの状態を確認してから更新
+            const content = document.getElementById('textContent');
+            const hasMirror = content.classList.contains('mirror-mode');
             scrollToCurrentLine();
+            // ミラーモードを再適用（必要な場合）
+            if (hasMirror && !content.classList.contains('mirror-mode')) {
+                content.classList.add('mirror-mode');
+            }
             updateProgressInfo();
         }
         
