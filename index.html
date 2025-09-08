@@ -245,6 +245,19 @@
             font-size: 36px;
         }
         
+        /* Smooth scrolling mode - prevent size changes */
+        .smooth-scrolling .text-line {
+            font-size: 42px !important;
+            transform: none !important;
+            margin: 0 !important;
+        }
+        
+        .smooth-scrolling .text-line.current {
+            font-size: 42px !important;
+            transform: none !important;
+            margin: 0 !important;
+        }
+        
         /* Reading Guide */
         .reading-guide {
             position: absolute;
@@ -781,6 +794,9 @@
             // Smooth continuous scrolling
             const scrollStep = 1.5 * state.scrollSpeed;
             
+            // Add smooth-scrolling class to prevent size changes
+            document.getElementById('textContent').classList.add('smooth-scrolling');
+            
             state.autoScrollInterval = setInterval(() => {
                 const content = document.getElementById('textContent');
                 const currentTransform = content.style.transform;
@@ -802,8 +818,8 @@
                     if (Math.abs(lineCenter - centerY) < rect.height / 2) {
                         if (state.currentLine !== index) {
                             state.currentLine = index;
-                            // Only update classes and progress, not scroll position
-                            updateLineClasses();
+                            // Update only visual indicators, not sizes
+                            updateLineClassesSmooth();
                             updateProgressInfo();
                         }
                     }
@@ -835,6 +851,8 @@
                 clearInterval(state.autoScrollInterval);
                 state.autoScrollInterval = null;
             }
+            // Remove smooth-scrolling class when stopping
+            document.getElementById('textContent').classList.remove('smooth-scrolling');
         }
         
         function nextLine() {
@@ -953,6 +971,24 @@
         function toggleGuide(enabled) {
             const guide = document.querySelector('.reading-guide');
             guide.style.display = enabled ? 'block' : 'none';
+        }
+        
+        // Update line classes for smooth scrolling (without size changes)
+        function updateLineClassesSmooth() {
+            const lines = document.querySelectorAll('.text-line');
+            lines.forEach((line, index) => {
+                line.classList.remove('current', 'next', 'passed');
+                if (index < state.currentLine) {
+                    line.classList.add('passed');
+                } else if (index === state.currentLine) {
+                    line.classList.add('current');
+                } else if (index === state.currentLine + 1) {
+                    line.classList.add('next');
+                }
+                
+                // Keep font size consistent in smooth mode
+                line.style.fontSize = `${state.fontSize}px`;
+            });
         }
         
         // Timer
