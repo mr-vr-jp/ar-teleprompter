@@ -212,7 +212,7 @@
         .text-content {
             position: absolute;
             width: 100%;
-            transition: transform 0.3s ease;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .text-line {
@@ -788,7 +788,10 @@
             const currentLineText = state.lines[state.currentLine] || '';
             const charCount = currentLineText.length;
             const baseTime = 100; // ms per character
-            const waitTime = (charCount * baseTime) / state.scrollSpeed;
+            // 最小待機時間を設定（短い行でも最低2秒は表示）
+            const minWaitTime = 2000;
+            const calculatedTime = (charCount * baseTime) / state.scrollSpeed;
+            const waitTime = Math.max(minWaitTime, calculatedTime);
             
             state.autoScrollInterval = setTimeout(() => {
                 if (state.isPlaying && state.currentLine < state.lines.length - 1) {
