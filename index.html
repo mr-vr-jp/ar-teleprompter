@@ -761,10 +761,18 @@
                 
                 // ミラーモードの場合はscaleXを保持
                 const hasMirror = content.classList.contains('mirror-mode');
+                // 常にミラーモードの状態を確実に保持
                 if (hasMirror) {
                     content.style.transform = `translateY(${newY}px) scaleX(-1)`;
                 } else {
-                    content.style.transform = `translateY(${newY}px)`;
+                    // ミラーモードでない場合も、念のため既存のscaleXをチェック
+                    const hasScale = currentTransform.includes('scaleX(-1)');
+                    if (hasScale) {
+                        // 何かの理由でscaleXが残っている場合は削除
+                        content.style.transform = `translateY(${newY}px)`;
+                    } else {
+                        content.style.transform = `translateY(${newY}px)`;
+                    }
                 }
             }
         }
